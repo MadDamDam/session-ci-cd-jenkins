@@ -11,42 +11,33 @@ pipeline {
     environment {PATH = "$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"}
 
     stages {
-        stage('Get_src') { // for display purposes
-            steps{
-                //def mvnHome
-                // Get some code from a GitHub repository
-                git 'https://github.com/MadDamDam/session-ci-cd-jenkins.git'
-                //mvnHome = 'DamDam here!'
-                echo 'finished stage get_src'
-            }
-       }
+//        stage('Checkout') { // for display purposes
+//            steps{
+//                // Get code from the GitHub repository
+//                git 'https://github.com/MadDamDam/session-ci-cd-jenkins.git'
+//                echo 'finished stage get_src'
+//            }
+//       }
 
-        stage('Run_ruby') {
+        stage('Test') {
+            //when{} block is like an if in declarative. decides when the stage runs.
+            //Declarative sucks!
             when {
                     expression { return isUnix()}
             }
             steps{
-                // Run ruby pre step
-                //if (isUnix()) {
-                    //echo "${mvnHome} This is unix!"
                     echo "This is unix!"
                     sh 'echo $PATH'
-                    //withEnv(['PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH']) {
                     //withEnv(["PATH+EXTRA=${env.HOME}/.rbenv/bin:${env.HOME}/.rbenv/shims"]) {
                     sh 'echo $PATH'
                     sh 'ruby app/tc_ruby_app.rb'
                 //}
-            // sh 'ruby app/tc_ruby_app.rb'
-                    sh 'ls -ltrh test/reports/'
 
-            //sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
-                //} else {
-                //    echo "I don't know what to do if this isn't unix"
-                //}
+                    sh 'ls -ltrh test/reports/'
             }
         }
 
-        stage('Build_docker') {
+        stage('Build') {
             steps{
                 // build docker stage
                 sh 'sudo docker build --no-cache -t localhost:5000/opsschool_dummy_app:latest .'
@@ -65,7 +56,7 @@ pipeline {
             }
         }
 
-        stage('Run_build') {
+        stage('Deploy') {
             steps {
                 sh 'sudo docker pull localhost:5000/opsschool_dummy_app:latest'
                 sh 'sudo docker-compose up -d'
