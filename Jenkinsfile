@@ -1,3 +1,4 @@
+#!/usr/bin/env groovy
 pipeline {
     // options([pipelineTriggers([githubPush()])])
 
@@ -11,6 +12,17 @@ pipeline {
     environment {PATH = "$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"}
 
     stages {
+
+//        stage ('Checkout') {
+//            checkout(
+//              [$class: 'GitSCM',
+//                branches: [[name: '*/master']],
+//                userRemoteConfigs: [[credentialsId: 'f1b23df2-9714-46fc-a220-d47d41406718',
+//                  url: 'git@github.com:mickeysh/session-ci-cd-jenkins']]]
+//            )
+//        }
+
+
 //        stage('Checkout') { // for display purposes
 //            steps{
 //                // Get code from the GitHub repository
